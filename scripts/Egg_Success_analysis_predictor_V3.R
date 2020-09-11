@@ -105,10 +105,27 @@ df_temp_var <- matrix(unlist(dfs[6]), ncol = 33)
 eggs.predict$Egg <- as.numeric(as.factor(eggs.predict$Egg.ID)) 
 eggs.new$Egg <- as.numeric(as.factor(eggs.new$Egg.ID)) 
 
+St.temp <- df_temp_mean
+for(i in 1:nrow(df_temp_mean)){
+  St.temp[i,1] <- mean(df_temp_mean[i,],na.rm=T)
+}
+for(i in 1:nrow(df_temp_mean)){
+  for(j in 2:ncol(df_temp_mean)){
+    if(is.na(St.temp[i,j])){ 
+      St.temp[i,j] <- St.temp[i,j-1]
+    }
+  }
+}
+St.temp[!is.na(St.temp)] <- NA
+for(i in 1:nrow(df_temp_mean)){
+  St.temp[i,1:(first[i]-1)] <- NA
+  St.temp[i,(last[i]+1):ncol(df_temp_mean)] <- NA
+}
+
 ################################DATASET FOR HYP 1 (temp mean)##########################
 dataset <- list(nind=nind,first=first,last=last,enc.hist=enc.hist,pair.ID=eggs.new$Pair.ID,
                 npair=length(unique(eggs.new$Pair.ID)), ntreat=length(unique(eggs.new$Egg.treatment)),
-                facility=eggs.new$Facility, egg.treatment=eggs.new$Egg.treatment,tempmean=df_temp_mean)
+                facility=eggs.new$Facility, egg.treatment=eggs.new$Egg.treatment,temp.mn=df_temp_mean)
 
 #initial values
 inits <- function(){
@@ -126,22 +143,32 @@ model {
     
 #####LIKELIHOOD
 for(i in 1:nind){  
-  for(t in first[i]:(last[i]-1)){
+  for(t in (first[i]+1):last[i]){
     
-    enc.hist[i,(t+1)] ~ dbern(S[i,t]*enc.hist[i,t])   
+    enc.hist[i,t] ~ dbern(S[i,t-1]*enc.hist[i,t-1])   
     
-    logit(S[i,t]) <- beta.int + alpha.Pr[pair.ID[i]] + alpha.Treat[egg.treatment[i]]
+    logit(S[i,t-1]) <- beta.int + alpha.Pr[pair.ID[i]] + alpha.Treat[egg.treatment[i]]
     
-    +beta.fac[facility[i]]  #+ beta.temp.mn*temp.mn[i,t] + 
+    + beta.fac[facility[i]] + beta.temp.mn*temp.mn[i,t-1] 
 
-    #temp.mn[i,t] ~ dnorm(mn.temp.mn[i,t],tau.temp.mn[treatment[i]])
-    #mn.temp.mn[i,t] <- mu.mn.temp + rho.mn.temp[treatment[i]]*(temp.mn[i,t-1]-mu.mn.temp)
+    temp.mn[i,t] ~ dnorm(mn.temp.mn[i,t],tau.temp.mn[egg.treatment[i]])
+    mn.temp.mn[i,t] <- mu.mn.temp + rho.mn.temp[egg.treatment[i]]*(temp.mn[i,t-1]-mu.mn.temp)
 
   }
 }
     
 #PARAMETER PRIORS 
 beta.int ~ dnorm(0,0.001)
+beta.temp.mn ~ dnorm(0,0.001)
+
+for(f in 1:8){
+  tau.temp.mn[f] <- pow(sigma.temp.mn[f],-2)
+  sigma.temp.mn[f] ~ dunif(0,5)
+  rho.mn.temp[f] ~ dnorm(0,0.001)
+}
+
+mu.mn.temp ~ dnorm(0,0.001)
+
 
 for(f in 1:2){
   beta.fac[f] ~ dnorm(0,0.001)
