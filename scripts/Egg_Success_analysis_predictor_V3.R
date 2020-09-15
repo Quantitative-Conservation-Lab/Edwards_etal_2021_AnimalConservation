@@ -52,7 +52,7 @@ nind <- nrow(enc.hist)#No. of individuals
 #### -> here you need to develop matrices of the predictors
 #### -> these will need to be the same dimensions as enc.hist (rows = eggs, cols = days)
 #### -> if the data are missing, put in NAs 
-#### -> these matrices will start on the day of hatching and end hatch/fail date
+#### -> these matrices will start on the day of placement with logger egg and end hatch/fail date
 #read in the daily environmental data
 eggs.predict <- read.csv(here("data","Egg_summary_survival_dailydata.csv"))
 
@@ -119,7 +119,7 @@ for(i in 1:nrow(df_temp_mean)){
 St.temp[!is.na(St.temp)] <- NA
 for(i in 1:nrow(df_temp_mean)){
   St.temp[i,1:(first[i]-1)] <- NA
-  St.temp[i,(last[i]+1):ncol(df_temp_mean)] <- NA
+  #St.temp[i,(last[i]+1):ncol(df_temp_mean)] <- NA
 }
 
 ################################DATASET FOR HYP 1 (temp mean)##########################
@@ -152,6 +152,7 @@ for(i in 1:nind){
     + beta.fac[facility[i]] + beta.temp.mn*temp.mn[i,t-1] 
 
     temp.mn[i,t] ~ dnorm(mn.temp.mn[i,t],tau.temp.mn[egg.treatment[i]])
+
     mn.temp.mn[i,t] <- mu.mn.temp + rho.mn.temp[egg.treatment[i]]*(temp.mn[i,t-1]-mu.mn.temp)
 
   }
