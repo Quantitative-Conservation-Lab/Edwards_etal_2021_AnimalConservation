@@ -13,15 +13,18 @@ eggs.new <- read.csv(here("data","eggs.new.csv"))
 
 eggs.new$Facility <- as.numeric(as.factor(eggs.new$Facility))
 eggs.new$Year <- as.numeric(as.factor(eggs.new$Year))
-eggs.new$Treatment2<-rep(0,length(eggs.new$Treatment))#Coded so level one has the largest sample size
+#Treatment is coded so level one has the largest sample size
+eggs.new$Treatment2<-rep(0,length(eggs.new$Treatment))
 eggs.new$Treatment2[which(eggs.new$Treatment=="B")] <- 5
 eggs.new$Treatment2[which(eggs.new$Treatment=="P")] <- 2
 eggs.new$Treatment2[which(eggs.new$Treatment=="GQF1")] <- 3
 eggs.new$Treatment2[which(eggs.new$Treatment=="GQF2")] <- 4
 eggs.new$Treatment2[which(eggs.new$Treatment=="SHC")] <- 1
 eggs.new$Treatment2[which(eggs.new$Treatment=="WC")] <- 6
-eggs.new$Egg.treatment <- as.integer(as.factor(eggs.new$Egg.treatment))#random effect hyp 1-egg type nested in incubation treatment
-eggs.new$Egg.type <- as.integer(as.factor(eggs.new$Egg.type))#random effect hyp 2
+#random effect hyp 1: egg type nested in incubation treatment
+eggs.new$Egg.treatment <- as.integer(as.factor(eggs.new$Egg.treatment))
+#random effect hyp 2
+eggs.new$Egg.type <- as.integer(as.factor(eggs.new$Egg.type))
 
 #start all nests at time 1  
 eggs.new$start <- eggs.new$Paired.date - (eggs.new$Paired.date) + 1
@@ -49,13 +52,15 @@ for(i in 1:nrow(enc.hist)){
 }
 nind <- nrow(enc.hist)#No. of individuals
 
-#### -> here you need to develop matrices of the predictors
-#### -> these will need to be the same dimensions as enc.hist (rows = eggs, cols = days)
-#### -> if the data are missing, put in NAs 
-#### -> these matrices will start on the day of placement with logger egg and end hatch/fail date
+#### -> matrices of the predictors
+#### -> the same dimensions as enc.hist (rows = eggs, cols = days)
+#### -> NAs for missing predictor data  
+#### -> matrices start on the day of placement with logger egg and end on hatch/fail date
 #read in the daily environmental data
-eggs.predict <- read.csv(here("data","Egg_summary_survival_dailydata.csv"))
+eggs.predict <- read.csv(here("data","Egg_summary_survival_dailydata_40min.csv"))
 
+#-----------------CHECK THIS HANNAH - SHOULDN'T DO THIS ANY LONGER, RIGHT? 
+#-----------------PLEASE COMMENT THIS CODE 
 #Create a variable that accounts for the first day of data being dropped as full day wasnt collected
 eggs.new$Paired.date_1<-eggs.new$Paired.date+1
 eggs.new$Paired.date_relative<-eggs.new$Paired.date_1-eggs.new$Paired.date
@@ -89,6 +94,7 @@ for(i in 1:length(nam)){
   df_rh_var[df_rh_var$Egg.ID == nam[i], 1:33]   <- t(temp$rh_var)
 } 
 
+#-----------------CHECK THIS HANNAH - is this line needed? clean up when you comment this code 
 #day.1 = rep(0, 73), day.2 = rep(0, 73))
 
 #Drop ID col and convert to matrix
@@ -105,22 +111,19 @@ df_temp_var <- matrix(unlist(dfs[6]), ncol = 33)
 eggs.predict$Egg <- as.numeric(as.factor(eggs.predict$Egg.ID)) 
 eggs.new$Egg <- as.numeric(as.factor(eggs.new$Egg.ID)) 
 
-St.temp <- df_temp_mean
-for(i in 1:nrow(df_temp_mean)){
-  St.temp[i,1] <- mean(df_temp_mean[i,],na.rm=T)
-}
-for(i in 1:nrow(df_temp_mean)){
-  for(j in 2:ncol(df_temp_mean)){
-    if(is.na(St.temp[i,j])){ 
-      St.temp[i,j] <- St.temp[i,j-1]
-    }
-  }
-}
-St.temp[!is.na(St.temp)] <- NA
-for(i in 1:nrow(df_temp_mean)){
-  St.temp[i,1:(first[i]-1)] <- NA
-  #St.temp[i,(last[i]+1):ncol(df_temp_mean)] <- NA
-}
+#this object binds together encounter histories, the predictor data (temp mean in this case) and first/last 
+#for the purposes of examining the data in a useful way  
+#dimensions are row (enc.hist), col(enc.hist+1) - to allow for inclusion of first/last, and 2 
+#print all.data.array[x,,] for any x to look at a summary of data for the full nest 
+#the first column will be enc.hist, the second column will be temp_mean, and the last row will be first/last
+all.data.array <- array(NA,dim=c((dim(enc.hist)[1]), (dim(enc.hist)[2]+1), 2))
+all.data.array[,1:dim(enc.hist)[2],1] <- enc.hist
+all.data.array[,1:dim(enc.hist)[2],2] <- df_temp_mean
+all.data.array[,dim(enc.hist)[2]+1,1] <- first
+all.data.array[,dim(enc.hist)[2]+1,2] <- last
+
+#-----------------CHECK THIS HANNAH - note that you could write out these objects to .csv files and then each model script could just pull in the needed files, that way you'd only have to run the code above once 
+
 
 ################################DATASET FOR HYP 1 (temp mean)##########################
 dataset <- list(nind=nind,first=first,last=last,enc.hist=enc.hist,pair.ID=eggs.new$Pair.ID,
@@ -133,6 +136,8 @@ inits <- function(){
 }
 
 #parameters
+
+#-----------------CHECK THIS HANNAH - what do you want to monitor?
 parameters <- c("beta.int","beta.fac")
 
 ######################### CREATE MODEL FILE HYP 1 #########################
@@ -147,6 +152,7 @@ for(i in 1:nind){
     
     enc.hist[i,t] ~ dbern(S[i,t-1]*enc.hist[i,t-1])   
     
+    #model for daily survival  
     logit(S[i,t-1]) <- beta.int + alpha.Pr[pair.ID[i]] + alpha.Treat[egg.treatment[i]]
     
     + beta.fac[facility[i]] + beta.temp.mn*temp.mn[i,t-1] 
@@ -169,7 +175,6 @@ for(f in 1:8){
 }
 
 mu.mn.temp ~ dnorm(0,0.001)
-
 
 for(f in 1:2){
   beta.fac[f] ~ dnorm(0,0.001)
@@ -197,9 +202,9 @@ sigma.treat ~ dunif(0,25)
 start <- Sys.time()
 
 nc <- 3
-nb <- 1000
+nb <- 10000
 nt <- 1
-ni <- 10000
+ni <- 60000
 
 library("jagsUI")
 jagsfit.1 <- jags(data=dataset, inits=inits, parameters.to.save=parameters, n.chains=nc, n.burnin = nb, n.iter=ni, n.thin=nt, model.file="nestmodel.txt", parallel=TRUE)

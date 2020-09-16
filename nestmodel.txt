@@ -7,11 +7,13 @@ for(i in 1:nind){
     
     enc.hist[i,t] ~ dbern(S[i,t-1]*enc.hist[i,t-1])   
     
+    #model for daily survival  
     logit(S[i,t-1]) <- beta.int + alpha.Pr[pair.ID[i]] + alpha.Treat[egg.treatment[i]]
     
     + beta.fac[facility[i]] + beta.temp.mn*temp.mn[i,t-1] 
 
     temp.mn[i,t] ~ dnorm(mn.temp.mn[i,t],tau.temp.mn[egg.treatment[i]])
+
     mn.temp.mn[i,t] <- mu.mn.temp + rho.mn.temp[egg.treatment[i]]*(temp.mn[i,t-1]-mu.mn.temp)
 
   }
@@ -28,7 +30,6 @@ for(f in 1:8){
 }
 
 mu.mn.temp ~ dnorm(0,0.001)
-
 
 for(f in 1:2){
   beta.fac[f] ~ dnorm(0,0.001)
