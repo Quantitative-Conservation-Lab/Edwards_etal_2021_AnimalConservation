@@ -8,7 +8,7 @@ for(i in 1:nind){
     enc.hist[i,t] ~ dbern(S[i,t-1]*enc.hist[i,t-1])   
     
     #model for daily survival  
-    logit(S[i,t-1]) <- beta.int + alpha.Pr[pair.ID[i]] + alpha.Treat[egg.treatment[i]]
+    logit(S[i,t-1]) <- alpha.Pr[pair.ID[i]] + alpha.Treat[egg.treatment[i]]
     
     + beta.fac[facility[i]] + beta.temp.mn*temp.mn[i,t-1] 
 
@@ -38,7 +38,7 @@ beta.fac[3] <- 0
 
 #RANDOM EFFECT
 for(i in 1:npair){
-  alpha.Pr[i] ~ dnorm(0,tau.pair)
+  alpha.Pr[i] ~ dnorm(beta.int,tau.pair)
 }
 tau.pair <- pow(sigma.pair,-2)
 sigma.pair ~ dunif(0,25) 

@@ -138,7 +138,7 @@ inits <- function(){
 #parameters
 
 #-----------------CHECK THIS HANNAH - what do you want to monitor?
-parameters <- c("beta.int","beta.fac")
+parameters <- c("beta.int","beta.fac","beta.temp.mn","mu.mn.temp","rho.mn.temp","sigma.temp.mn")
 
 ######################### CREATE MODEL FILE HYP 1 #########################
 #Daily hatch/fail~environ param + environ param^2 (maybe?) + facility + random = pair ID + egg type/treatment
@@ -153,7 +153,7 @@ for(i in 1:nind){
     enc.hist[i,t] ~ dbern(S[i,t-1]*enc.hist[i,t-1])   
     
     #model for daily survival  
-    logit(S[i,t-1]) <- beta.int + alpha.Pr[pair.ID[i]] + alpha.Treat[egg.treatment[i]]
+    logit(S[i,t-1]) <- alpha.Pr[pair.ID[i]] + alpha.Treat[egg.treatment[i]]
     
     + beta.fac[facility[i]] + beta.temp.mn*temp.mn[i,t-1] 
 
@@ -183,7 +183,7 @@ beta.fac[3] <- 0
 
 #RANDOM EFFECT
 for(i in 1:npair){
-  alpha.Pr[i] ~ dnorm(0,tau.pair)
+  alpha.Pr[i] ~ dnorm(beta.int,tau.pair)
 }
 tau.pair <- pow(sigma.pair,-2)
 sigma.pair ~ dunif(0,25) 
@@ -202,9 +202,9 @@ sigma.treat ~ dunif(0,25)
 start <- Sys.time()
 
 nc <- 3
-nb <- 10000
+nb <- 20000
 nt <- 1
-ni <- 60000
+ni <- 120000
 
 library("jagsUI")
 jagsfit.1 <- jags(data=dataset, inits=inits, parameters.to.save=parameters, n.chains=nc, n.burnin = nb, n.iter=ni, n.thin=nt, model.file="nestmodel.txt", parallel=TRUE)
