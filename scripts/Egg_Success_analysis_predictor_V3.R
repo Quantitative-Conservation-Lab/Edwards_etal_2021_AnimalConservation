@@ -60,7 +60,9 @@ nind <- nrow(enc.hist)#No. of individuals
 eggs.predict <- read.csv(here("data","Egg_summary_survival_dailydata_40min.csv"))
 
 #-----------------CHECK THIS HANNAH - SHOULDN'T DO THIS ANY LONGER, RIGHT? 
-#-----------------PLEASE COMMENT THIS CODE 
+#-----------------Yes, we don't need to drop the first day anymore (line 65-66), but we
+#-----------------do need to create individual matrices of daily temp/humidity/egg turning
+
 #Create a variable that accounts for the first day of data being dropped as full day wasnt collected
 eggs.new$Paired.date_1<-eggs.new$Paired.date+1
 eggs.new$Paired.date_relative<-eggs.new$Paired.date_1-eggs.new$Paired.date
@@ -94,9 +96,6 @@ for(i in 1:length(nam)){
   df_rh_var[df_rh_var$Egg.ID == nam[i], 1:33]   <- t(temp$rh_var)
 } 
 
-#-----------------CHECK THIS HANNAH - is this line needed? clean up when you comment this code 
-#day.1 = rep(0, 73), day.2 = rep(0, 73))
-
 #Drop ID col and convert to matrix
 dfs <- list(df_rh_mean, df_rh_var, df_rot_mean, df_rot_var, df_temp_mean, df_temp_var)
 dfs<-lapply(dfs, function(x) x[-34])
@@ -121,9 +120,19 @@ all.data.array[,1:dim(enc.hist)[2],1] <- enc.hist
 all.data.array[,1:dim(enc.hist)[2],2] <- df_temp_mean
 all.data.array[,dim(enc.hist)[2]+1,1] <- first
 all.data.array[,dim(enc.hist)[2]+1,2] <- last
-
+            
+write.csv(enc.hist, file="data/enc.hist.csv", row.names=F)
+write.csv(df_temp_mean, file="data/df_temp_mean.csv", row.names=F)
+write.csv(df_temp_var, file="data/df_temp_var.csv", row.names=F)
+write.csv(df_rh_mean, file="data/df_rh_mean.csv", row.names=F)
+write.csv(df_rh_var, file="data/df_rh_var.csv", row.names=F)
+write.csv(df_rot_mean, file="data/df_rot_mean.csv", row.names=F)
+write.csv(df_rot_var, file="data/df_rot_var.csv", row.names=F)
+write.csv(first, file="data/first.csv", row.names=F)
+write.csv(last, file="data/last.csv", row.names=F)
+            
 #-----------------CHECK THIS HANNAH - note that you could write out these objects to .csv files and then each model script could just pull in the needed files, that way you'd only have to run the code above once 
-
+#-----------------Agreed, added csv code
 
 ################################DATASET FOR HYP 1 (temp mean)##########################
 dataset <- list(nind=nind,first=first,last=last,enc.hist=enc.hist,pair.ID=eggs.new$Pair.ID,
@@ -138,6 +147,8 @@ inits <- function(){
 #parameters
 
 #-----------------CHECK THIS HANNAH - what do you want to monitor?
+#-----------------I think we want to monitor the intercept and all the predictors, and do we want to calculate log-likelihood (and thus need to monitor that)
+#-----------------to compare this model to a null model and a model with a quadratic term for the environmental parameter?
 parameters <- c("beta.int","beta.fac","beta.temp.mn","mu.mn.temp","rho.mn.temp","sigma.temp.mn")
 
 ######################### CREATE MODEL FILE HYP 1 #########################
