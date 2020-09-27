@@ -14,7 +14,7 @@ for(i in 1:nind){
 
     temp.mn[i,t] ~ dnorm(mn.temp.mn[i,t],tau.temp.mn[egg.treatment[i]])
 
-    mn.temp.mn[i,t] <- mu.mn.temp + rho.mn.temp[egg.treatment[i]]*(temp.mn[i,t-1]-mu.mn.temp)
+    mn.temp.mn[i,t] <- mu.mn.temp + rho.mn.temp*(temp.mn[i,t-1]-mu.mn.temp)
 
   }
 }
@@ -26,10 +26,10 @@ beta.temp.mn ~ dnorm(0,0.001)
 for(f in 1:8){
   tau.temp.mn[f] <- pow(sigma.temp.mn[f],-2)
   sigma.temp.mn[f] ~ dunif(0,5)
-  rho.mn.temp[f] ~ dnorm(0,0.001)
 }
 
 mu.mn.temp ~ dnorm(0,0.001)
+rho.mn.temp ~ dnorm(0,0.001)
 
 for(f in 1:2){
   beta.fac[f] ~ dnorm(0,0.001)

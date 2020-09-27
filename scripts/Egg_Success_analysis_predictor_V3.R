@@ -138,7 +138,7 @@ inits <- function(){
 #parameters
 
 #-----------------CHECK THIS HANNAH - what do you want to monitor?
-parameters <- c("beta.int","beta.fac","beta.temp.mn","mu.mn.temp","rho.mn.temp","sigma.temp.mn")
+parameters <- c("beta.int","beta.fac","beta.temp.mn","mu.mn.temp","rho.mn.temp","sigma.temp.mn","temp.mn")
 
 ######################### CREATE MODEL FILE HYP 1 #########################
 #Daily hatch/fail~environ param + environ param^2 (maybe?) + facility + random = pair ID + egg type/treatment
