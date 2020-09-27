@@ -147,13 +147,10 @@ inits <- function(){
 #parameters
 
 #-----------------CHECK THIS HANNAH - what do you want to monitor?
-<<<<<<< HEAD
-parameters <- c("beta.int","beta.fac","beta.temp.mn","mu.mn.temp","rho.mn.temp","sigma.temp.mn","temp.mn")
-=======
+
 #-----------------I think we want to monitor the intercept and all the predictors, and do we want to calculate log-likelihood (and thus need to monitor that)
 #-----------------to compare this model to a null model and a model with a quadratic term for the environmental parameter?
-parameters <- c("beta.int","beta.fac","beta.temp.mn","mu.mn.temp","rho.mn.temp","sigma.temp.mn")
->>>>>>> 8bb8abcc15f3b9f3c6de08908aaaa46573af21a8
+parameters <- c("beta.int","beta.fac","beta.temp.mn","mu.mn.temp","rho.mn.temp","sigma.temp.mn","temp.mn")
 
 ######################### CREATE MODEL FILE HYP 1 #########################
 #Daily hatch/fail~environ param + environ param^2 (maybe?) + facility + random = pair ID + egg type/treatment
@@ -189,7 +186,7 @@ for(f in 1:8){
 }
 
 mu.mn.temp ~ dnorm(0,0.001)
-rho.mn.temp ~ dnorm(0,0.001)
+rho.mn.temp ~ dunif(-1,0)
 
 for(f in 1:2){
   beta.fac[f] ~ dnorm(0,0.001)
