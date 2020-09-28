@@ -29,7 +29,7 @@ for(f in 1:8){
 }
 
 mu.mn.temp ~ dnorm(0,0.001)
-rho.mn.temp ~ dnorm(0,0.001)
+rho.mn.temp ~ dunif(-1,0)
 
 for(f in 1:2){
   beta.fac[f] ~ dnorm(0,0.001)
