@@ -7,33 +7,35 @@ library(here)
 
 source(here("scripts","incubation_simulation.r"))
 
-###SETTING UP CONTROL PARAMETERS 
+###SET UP CONTROL PARAMETERS 
+#capacity of the artificial incubator
+inc.spaces <- 30
 #WC pairs
 pairs <- 10
+#minimum number of days before a pair can recycle after it has laid or has been incubating an egg
+recycle.days <- 5
 #the maximum number of eggs a pair can lay
 max.eggs.pair <- 6
-#the minimum number of days before a pair can recycle after it has laid or has been incubating an egg
-recycle.days <- 5
-#the length of the annual laying period, e.g., April 1 through June 1 
+#length of the annual laying period, e.g., April 1 through June 1 
 lay.days <- 60 
-#the number of reps to run 
-reps <- 10000
-#this is the number of spaces in the artificial incubator
-inc.spaces <- 30  
-#if an egg is laid within this number of days before end of laying days, the WC get to incubate it themselves
+#if an egg is laid within this number of days before end of lay days, the WC incubate it themselves
 season.end.threshold <- 10 
+#number of reps to run 
+reps <- 100
+
+#inc.method is either "WC" = whooping cranes, "ART" = artificial incubator, or "SHC" = sandhill cranes
+#if you set inc.method to "SHC" you must also set the number of SHC pairs (no.SHC)
+#all other control parameters in the function are defined above 
 
 #Run multiple scenarios
 out.1 <- inc.eval(inc.method = "WC", no.SHC = NA, inc.spaces = NA, pairs = pairs, recycle.days = recycle.days, max.eggs.pair = max.eggs.pair, lay.days = lay.days, season.end.threshold = season.end.threshold, reps = reps)
 out.2 <- inc.eval(inc.method = "ART", no.SHC = NA, inc.spaces = inc.spaces, pairs = pairs, recycle.days = recycle.days, max.eggs.pair = max.eggs.pair, lay.days = lay.days, season.end.threshold = season.end.threshold, reps = reps)
 out.3 <- inc.eval(inc.method = "SHC", no.SHC = 3, inc.spaces = NA, pairs = pairs, recycle.days = recycle.days, max.eggs.pair = max.eggs.pair, lay.days = lay.days, season.end.threshold = season.end.threshold, reps = reps)
-out.4 <- inc.eval(inc.method = "SHC", no.SHC = 6, inc.spaces = NA, pairs = pairs, recycle.days = recycle.days, max.eggs.pair = max.eggs.pair, lay.days = lay.days, season.end.threshold = season.end.threshold, reps = reps)
-out.5 <- inc.eval(inc.method = "SHC", no.SHC = 9, inc.spaces = NA, pairs = pairs, recycle.days = recycle.days, max.eggs.pair = max.eggs.pair, lay.days = lay.days, season.end.threshold = season.end.threshold, reps = reps)
-out.6 <- inc.eval(inc.method = "SHC", no.SHC = 12, inc.spaces = NA, pairs = pairs, recycle.days = recycle.days, max.eggs.pair = max.eggs.pair, lay.days = lay.days, season.end.threshold = season.end.threshold, reps = reps)
-out.7 <- inc.eval(inc.method = "SHC", no.SHC = 13, inc.spaces = NA, pairs = pairs, recycle.days = recycle.days, max.eggs.pair = max.eggs.pair, lay.days = lay.days, season.end.threshold = season.end.threshold, reps = reps)
-out.8 <- inc.eval(inc.method = "SHC", no.SHC = 14, inc.spaces = NA, pairs = pairs, recycle.days = recycle.days, max.eggs.pair = max.eggs.pair, lay.days = lay.days, season.end.threshold = season.end.threshold, reps = reps)
-out.9 <- inc.eval(inc.method = "SHC", no.SHC = 15, inc.spaces = NA, pairs = pairs, recycle.days = recycle.days, max.eggs.pair = max.eggs.pair, lay.days = lay.days, season.end.threshold = season.end.threshold, reps = reps)
-out.10 <- inc.eval(inc.method = "SHC", no.SHC = 16, inc.spaces = NA, pairs = pairs, recycle.days = recycle.days, max.eggs.pair = max.eggs.pair, lay.days = lay.days, season.end.threshold = season.end.threshold, reps = reps)
+out.4 <- inc.eval(inc.method = "SHC", no.SHC = 4, inc.spaces = NA, pairs = pairs, recycle.days = recycle.days, max.eggs.pair = max.eggs.pair, lay.days = lay.days, season.end.threshold = season.end.threshold, reps = reps)
+out.5 <- inc.eval(inc.method = "SHC", no.SHC = 5, inc.spaces = NA, pairs = pairs, recycle.days = recycle.days, max.eggs.pair = max.eggs.pair, lay.days = lay.days, season.end.threshold = season.end.threshold, reps = reps)
+out.6 <- inc.eval(inc.method = "SHC", no.SHC = 6, inc.spaces = NA, pairs = pairs, recycle.days = recycle.days, max.eggs.pair = max.eggs.pair, lay.days = lay.days, season.end.threshold = season.end.threshold, reps = reps)
+out.7 <- inc.eval(inc.method = "SHC", no.SHC = 7, inc.spaces = NA, pairs = pairs, recycle.days = recycle.days, max.eggs.pair = max.eggs.pair, lay.days = lay.days, season.end.threshold = season.end.threshold, reps = reps)
+out.8 <- inc.eval(inc.method = "SHC", no.SHC = 8, inc.spaces = NA, pairs = pairs, recycle.days = recycle.days, max.eggs.pair = max.eggs.pair, lay.days = lay.days, season.end.threshold = season.end.threshold, reps = reps)
 
 mean(out.1$eggs.laid)
 quantile(out.1$eggs.laid,probs=c(0.025,0.975))
@@ -90,17 +92,3 @@ mean(out.8$successes)
 quantile(out.8$successes,probs=c(0.025,0.975))
 mean(out.8$success.rate)
 quantile(out.8$success.rate,probs=c(0.025,0.975))
-
-mean(out.9$eggs.laid)
-quantile(out.9$eggs.laid,probs=c(0.025,0.975))
-mean(out.9$successes)
-quantile(out.9$successes,probs=c(0.025,0.975))
-mean(out.9$success.rate)
-quantile(out.9$success.rate,probs=c(0.025,0.975))
-
-mean(out.10$eggs.laid)
-quantile(out.10$eggs.laid,probs=c(0.025,0.975))
-mean(out.10$successes)
-quantile(out.10$successes,probs=c(0.025,0.975))
-mean(out.10$success.rate)
-quantile(out.10$success.rate,probs=c(0.025,0.975))
