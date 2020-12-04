@@ -9,7 +9,7 @@ source(here("scripts","incubation_simulation.r"))
 
 ###SET UP CONTROL PARAMETERS 
 #capacity of the artificial incubator
-inc.spaces <- 30
+inc.spaces <- 25
 #WC pairs
 pairs <- 10
 #minimum number of days before a pair can recycle after it has laid or has been incubating an egg
