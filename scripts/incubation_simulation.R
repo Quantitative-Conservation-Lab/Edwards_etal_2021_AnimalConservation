@@ -8,12 +8,49 @@
 
 #Current draft 12/2/2020
 #Written by sconver@uw.edu 
+library(stringr)
+
+# load the posteriors and format them for the analyses
+load(file = "model_outputs/jagsfit.m_treatment_no_random.RData")
+rn <- row.names(jagsfit.m_treatment$summary)
+para <- rn[str_detect(rn, "log.like", negate = T)]
+
+expit <- function (x) round(exp(x)/(1 + exp(x)), 2)
+
+test <- FALSE
+#test <- TRUE
+if(test==TRUE){
+  nc <- 4
+  nt <- 1#5 #thinning
+  ni <- 500#50000 #iteration
+  nb <- 50#ni - 40000 #burn-in
+  na <- 500 # adaptation
+} else{
+  set.seed(10, kind = "Mersenne-Twister", normal.kind = "Inversion")
+  nc <- 4
+  nt <- 5 #thinning
+  ni <- 300000 #iteration
+  nb <- ni - 80000 #burn-in
+  na <- 100000 # adaptation
+  (ni-nb)/5
+  if(nb<=0) stop("burn in is negative")
+}
+
+samples_per_chain <- ((ni-nb)/nt)
+
+posteriors <- data.frame(GQF1 = numeric(nc*samples_per_chain), WC = numeric(nc*samples_per_chain), SHC = numeric(nc*samples_per_chain))
+
+for(i in 1:nc){
+  posteriors[(1+(samples_per_chain*(i-1))):(samples_per_chain*i), "GQF1"] <- expit(jagsfit.m_treatment$samples[, "int"][[i]] +
+                                                                                     jagsfit.m_treatment$samples[, "treats[1]"][[i]])
+  posteriors[(1+(samples_per_chain*(i-1))):(samples_per_chain*i), "WC"] <- expit(jagsfit.m_treatment$samples[, "int"][[i]] + 
+                                                                                   jagsfit.m_treatment$samples[, "treats[6]"][[i]])
+  posteriors[(1+(samples_per_chain*(i-1))):(samples_per_chain*i), "SHC"] <- expit(jagsfit.m_treatment$samples[, "int"][[i]] + 
+                                                                                    jagsfit.m_treatment$samples[, "treats[4]"][[i]])
+}
 
 inc.eval <- function(inc.method = NA, no.SHC = NA, inc.spaces = NA, pairs = NA, recycle.days = NA, max.eggs.pair = NA, lay.days = NA, season.end.threshold = NA, reps = NA){
-  
-#######################################################################################################################
-#####HANNAH: need to bring in parametric uncertainty here - replace the short vector here with the full vector of posterior samples#####  
-#######################################################################################################################
+ 
 daily.surv.all <- matrix(0,nrow=3,ncol=2) 
 daily.surv.all[1,] <- c(0.98,0.981) #pretend samples from WC daily incubation success
 daily.surv.all[2,] <- c(0.97,0.971) #pretend samples from artificial incubator daily incubation success
