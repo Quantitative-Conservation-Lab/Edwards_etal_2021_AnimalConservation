@@ -20,7 +20,7 @@ max.eggs.pair <- 6
 lay.days <- 60 
 #if an egg is laid within this number of days before end of lay days, the WC incubate it themselves
 season.end.threshold <- 10 
-#number of reps to run 
+#number of reps to run - maybe something like 10000 ultimately 
 reps <- 100
 
 #inc.method is either "WC" = whooping cranes, "ART" = artificial incubator, or "SHC" = sandhill cranes
