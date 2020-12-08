@@ -1,0 +1,22 @@
+model {
+
+    
+
+#####LIKELIHOOD
+   for(i in 1:nind){  
+
+
+     last.enc[i] ~ dbern(S[i]) 
+
+     logit(S[i]) <- int 
+
+
+     #log-likelihood calc
+     log.like[i] <- logdensity.bin(last.enc[i], S[i], 1) 
+
+   }
+
+   	#####PARAMETER PRIORS
+	int ~ dunif(-10,10)
+
+}
