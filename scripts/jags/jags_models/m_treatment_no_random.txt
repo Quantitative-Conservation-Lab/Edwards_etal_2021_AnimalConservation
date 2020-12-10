@@ -1,0 +1,34 @@
+model {
+   
+
+#####LIKELIHOOD
+for(i in 1:nind){  
+
+    last.enc[i] ~ dbern(S[i]) 
+
+    logit(S[i]) <- int + treats[treatment[i]] 
+
+    
+#log-likelihood calc
+
+       log.like[i] <- logdensity.bin(last.enc[i], S[i], 1) 
+
+  }
+
+	#####PARAMETER PRIORS
+   
+
+	#PARAMETER PRIORS 
+
+	int ~ dunif(-10,10)		
+
+	for(t in 1:6){
+
+		temp[t] ~ dnorm(0, 0.01)
+
+	}
+
+	treats <- temp - mean(temp)
+
+
+}
