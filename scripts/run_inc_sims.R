@@ -13,7 +13,7 @@ inc.spaces <- 25
 #WC pairs
 pairs <- 10
 #minimum number of days before a pair can recycle after it has laid or has been incubating an egg
-recycle.days <- 5
+recycle.days <- 10
 #the maximum number of eggs a pair can lay
 max.eggs.pair <- 6
 #length of the annual laying period, e.g., April 1 through June 1 
@@ -36,6 +36,7 @@ out.5 <- inc.eval(inc.method = "SHC", no.SHC = 5, inc.spaces = NA, pairs = pairs
 out.6 <- inc.eval(inc.method = "SHC", no.SHC = 6, inc.spaces = NA, pairs = pairs, recycle.days = recycle.days, max.eggs.pair = max.eggs.pair, lay.days = lay.days, season.end.threshold = season.end.threshold, reps = reps)
 out.7 <- inc.eval(inc.method = "SHC", no.SHC = 7, inc.spaces = NA, pairs = pairs, recycle.days = recycle.days, max.eggs.pair = max.eggs.pair, lay.days = lay.days, season.end.threshold = season.end.threshold, reps = reps)
 out.8 <- inc.eval(inc.method = "SHC", no.SHC = 8, inc.spaces = NA, pairs = pairs, recycle.days = recycle.days, max.eggs.pair = max.eggs.pair, lay.days = lay.days, season.end.threshold = season.end.threshold, reps = reps)
+out.15 <- inc.eval(inc.method = "SHC", no.SHC = 15, inc.spaces = NA, pairs = pairs, recycle.days = recycle.days, max.eggs.pair = max.eggs.pair, lay.days = lay.days, season.end.threshold = season.end.threshold, reps = reps)
 
 mean(out.1$eggs.laid)
 quantile(out.1$eggs.laid,probs=c(0.025,0.975))
@@ -92,3 +93,10 @@ mean(out.8$successes)
 quantile(out.8$successes,probs=c(0.025,0.975))
 mean(out.8$success.rate)
 quantile(out.8$success.rate,probs=c(0.025,0.975))
+
+mean(out.15$eggs.laid)
+quantile(out.15$eggs.laid,probs=c(0.025,0.975))
+mean(out.15$successes)
+quantile(out.15$successes,probs=c(0.025,0.975))
+mean(out.15$success.rate)
+quantile(out.15$success.rate,probs=c(0.025,0.975))
