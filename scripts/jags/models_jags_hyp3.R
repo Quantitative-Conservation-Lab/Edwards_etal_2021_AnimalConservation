@@ -52,7 +52,7 @@ facility[which(data_predict$Facility=="Patuxent")] <- 1
 #Specify normal distribution: http://biometry.github.io/APES//LectureNotes/StatsCafe/Linear_models_jags.html
 treatment.range <- seq(1,6, by = 1)
 
-cat("model {
+model.string.1<-"model {
 
      for(i in 1:nind){
      #Likelihood function
@@ -75,12 +75,11 @@ cat("model {
      tau <- 1/(sigma*sigma)
      sigma ~ dunif(0,100)
 
-     for(k in 1:Neggtype){
-     b3[k] ~ dnorm(0,0.01)
-     }
+    b3[1] <- 0 
+    b3[2] ~ dnorm(0,0.01)
 
    }
-",file = "tempmean_treatment.txt ")
+" cat(file = "tempmean_treatment.jags ", model.string.1)
 
 #Treat egg type as a fixed effect
 treatment.range <- seq(1,6, by = 1)
@@ -115,9 +114,8 @@ model.stringx<-"model {
      tau <- 1/(sigma*sigma)
      sigma ~ dunif(0,100)
 
-     for(k in 1:Neggtype){
-     b3[k] ~ dnorm(0,0.01)
-     }
+    b3[1] <- 0 
+    b3[2] ~ dnorm(0,0.01)
 
   }
     "
@@ -153,9 +151,8 @@ model.string.2<- "model {
     tau <- 1/(sigma*sigma)
     sigma ~ dunif(0,100)
 
-    for(k in 1:Neggtype){
-     b3[k] ~ dnorm(0,0.01)
-     }
+    b3[1] <- 0 
+    b3[2] ~ dnorm(0,0.01)
     
     }
     "
@@ -192,9 +189,8 @@ model.string.3<- "model {
     tau <- 1/(sigma*sigma)
     sigma ~ dunif(0,100)
 
-     for(k in 1:Neggtype){
-     b3[k] ~ dnorm(0,0.01)
-     }
+    b3[1] <- 0 
+    b3[2] ~ dnorm(0,0.01)
     
     }
     "
@@ -230,9 +226,8 @@ model.string.4<-"model {
     tau <- 1/(sigma*sigma)
     sigma ~ dunif(0,100)
 
-    for(k in 1:Neggtype){
-     b3[k] ~ dnorm(0,0.01)
-     }
+    b3[1] <- 0 
+    b3[2] ~ dnorm(0,0.01)
     
     }
     "
@@ -268,9 +263,8 @@ model.string.5<-"model {
     tau <- 1/(sigma*sigma)
     sigma ~ dunif(0,100)
 
-    for(k in 1:Neggtype){
-     b3[k] ~ dnorm(0,0.01)
-     }
+    b3[1] <- 0 
+    b3[2] ~ dnorm(0,0.01)
     
     }
     "
@@ -306,9 +300,8 @@ model.string.6<-"model {
     tau <- 1/(sigma*sigma)
     sigma ~ dunif(0,100)
 
-     for(k in 1:Neggtype){
-     b3[k] ~ dnorm(0,0.01)
-     }
+    b3[1] <- 0 
+    b3[2] ~ dnorm(0,0.01)
      
     }
     "
@@ -326,8 +319,8 @@ jags.data5 <- list(rotmean=rotmean,nind=nind,treatment=treatment,facility=facili
 jags.data6 <- list(rotvar=rotvar,nind=nind,treatment=treatment,facility=facility, egg.type=egg.type,Neggtype = Neggtype, treatment.range=treatment.range)
 
 # Initial values 
-inits <- function(){list(b0=runif(1), b1=c(NA, runif(5)), b2=c(NA, runif(2)), b3=runif(1))} 
-inits_eggfixed <- function(){list(b0=runif(1), b1=c(NA, runif(5)), b2=c(NA, runif(2)), b3=runif(1))} 
+inits <- function(){list(b0=runif(1), b1=c(NA, runif(5)), b2=c(NA, runif(2)), b3=c(NA, runif(1)))} 
+inits_eggfixed <- function(){list(b0=runif(1), b1=c(NA, runif(5)), b2=c(NA, runif(2)), b3=c(NA, runif(1)))} 
 
 # Parameters monitored
 parameters <- c("b0","b1","b2","b3")
@@ -336,7 +329,7 @@ parameters <- c("b0","b1","b2","b3")
 ni <- 300000; nt <- 5; nb <- ni-80000; nc <- 4
 
 # Call JAGS from R (jagsUI), check convergence and summarize posteriors
-egg.model <- jags(data=jags.data, inits=inits, parameters.to.save =  parameters, model.file = "tempmean_treatment.txt", n.chains = nc, n.thin = nt, n.iter = ni, n.burnin = nb, parallel=TRUE)
+egg.model <- jags(jags.data, inits, parameters, tempmean_treatment.jags, n.chains = nc, n.thin = nt, n.iter = ni, n.burnin = nb, parallel=TRUE)
 egg.model_eggfixed <- jags(jags.data_eggfixed, inits_eggfixed, parameters, tempmean_treatment_eggfixed.jags, n.chains = nc, n.thin = nt, n.iter = ni, n.burnin = nb, parallel=TRUE)
 egg.model2 <- jags(jags.data2, inits, parameters, tempvar_treatment.jags, n.chains = nc, n.thin = nt, n.iter = ni, n.burnin = nb, parallel=TRUE)
 egg.model3 <- jags(jags.data3, inits, parameters, rhmean_treatment.jags, n.chains = nc, n.thin = nt, n.iter = ni, n.burnin = nb, parallel=TRUE)
