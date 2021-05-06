@@ -1,6 +1,5 @@
 #-----------------------------------------------------
 
-
 # Scripts to run the models in JAGS with the jagsUI package.
 # These models address the hypothesis that the environmental predictor rh.var measured in the nest 
 # affect the survival of the eggs.
