@@ -50,6 +50,7 @@ facility[which(data_predict$Facility=="Patuxent")] <- 1
 
 ##Random intercepts model (equivalent to tempmean~treatment+facility+egg type)
 #Specify normal distribution: http://biometry.github.io/APES//LectureNotes/StatsCafe/Linear_models_jags.html
+#Temp mean
 treatment.range <- seq(1,6, by = 1)
 
 model.string.1<-"model {
@@ -81,49 +82,7 @@ model.string.1<-"model {
    }
 " cat(file = "tempmean_treatment.jags ", model.string.1)
 
-#Treat egg type as a fixed effect
-treatment.range <- seq(1,6, by = 1)
-egg.range <- seq(1,2, by = 1)
-
-model.stringx<-"model { 
-    
-    for(i in 1:nind){
-    
-    #Likelihood function
-    
-    tempmean[i] ~ dnorm(mu[i], tau)
-    
-    mu[i] <- b0 + b1[treatment[i]] + b2[facility[i]] + b3[egg.type[i]]
-    
-    }
-
-    #First level priors
-    b0 ~ dnorm(0, 0.01)
-    
-    b1[1] <- 0
-    for(i in 2:6){
-    b1[i] ~ dnorm(0,0.01)
-    }
-    
-    b2[1] <- 0
-    for(i in 2:3){
-    b2[i] ~ dnorm(0,0.01)
-    }
-    
-    #Second level priors
-     tau <- 1/(sigma*sigma)
-     sigma ~ dunif(0,100)
-
-    b3[1] <- 0 
-    b3[2] ~ dnorm(0,0.01)
-
-  }
-    "
-cat(file = "tempmean_treatment_eggfixed.jags ", model.stringx)
-
-tempmean_treatment_eggfixed.jags <-"tempmean_treatment_eggfixed.jags "
-
-##Random intercepts model (equivalent to tempvar~treatment+facility+egg type
+##Temp var
 model.string.2<- "model { 
     
     for(i in 1:nind){
@@ -161,7 +120,7 @@ cat(file = "tempvar_treatment.jags ", model.string.2)
 
 tempvar_treatment.jags <-"tempvar_treatment.jags "
 
-##Random intercepts model (equivalent to rhmean~treatment+facility+egg type
+#RH mean
 model.string.3<- "model { 
     
     for(i in 1:nind){
@@ -198,7 +157,7 @@ cat(file = "rhmean_treatment.jags ", model.string.3)
 
 rhmean_treatment.jags <-"rhmean_treatment.jags "
 
-##Random intercepts model (equivalent to rhvar~treatment+facility+egg type
+##Rh var
 model.string.4<-"model { 
     
     for(i in 1:nind){
@@ -235,7 +194,7 @@ cat(file = "rhvar_treatment.jags ", model.string.4)
 
 rhvar_treatment.jags <-"rhvar_treatment.jags "
 
-##Random intercepts model (equivalent to rotmean~treatment+facility+egg type
+#Rot mean
 model.string.5<-"model { 
     
     for(i in 1:nind){
@@ -272,7 +231,7 @@ cat(file = "rotmean_treatment.jags ", model.string.5)
 
 rotmean_treatment.jags <-"rotmean_treatment.jags "
 
-##Random intercepts model (equivalent to rotvar~treatment+facility+egg type
+#Rot var
 model.string.6<-"model { 
     
     for(i in 1:nind){

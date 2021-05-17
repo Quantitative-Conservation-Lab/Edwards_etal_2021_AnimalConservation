@@ -84,15 +84,18 @@ inits <- function(){
 #parameters
 
 #-----------------We want to monitor the intercept and all the predictors, and do we want to calculate log-likelihood (and thus need to monitor that)
-#-----------------to compare this model to a null model and a model with a quadratic term for the environmental parameter?
+#-----------------to compare this model to a null model and a model with a quadratic term for the environmental parameter
+
 parameters_quadratic <- c("log.like.id", "beta.int","beta.fac","beta.temp.mn","beta.temp.mn2", "mu.mn.temp.mn","rho.mn.temp.mn","sigma.temp.mn",
                          "alpha.Treat", "sigma.treat")
 parameters_linear <- c("log.like.id","beta.int","beta.fac","beta.temp.mn","mu.mn.temp.mn","rho.mn.temp.mn","sigma.temp.mn",
                         "alpha.Treat", "sigma.treat")
 parameters_null <- c("log.like.id", "beta.int","beta.fac", "mu.mn.temp.mn","rho.mn.temp.mn","sigma.temp.mn",
                       "alpha.Treat", "sigma.treat")
+
 ######################### CREATE MODEL FILE HYP 1 #########################
 # quadratic
+
 cat("
 model {
     
@@ -161,6 +164,7 @@ sigma.treat ~ dunif(0,25)
 
 #########################################################################
 # linear
+
 cat("
 model {
     
@@ -226,6 +230,7 @@ beta.fac[3] <- 0
 
 #########################################################################
 # null
+
 cat("
 model {
     
@@ -277,6 +282,7 @@ sigma.treat ~ dunif(0,25)
 
 }
 ",file="scripts/jags/jags_models/nestmodel_null.txt")
+
 ######################### RUN BUGS #########################
 
 start <- Sys.time()
@@ -304,6 +310,7 @@ end <- Sys.time() - start
 end
 #######################################################################################
 #################### MODEL COMPARISON
+
 if(file.exists("model_outputs/jags/compare_temp.mn.txt")) unlink("model_outputs/jags/compare_temp.mn.txt")
 sink(file = "model_outputs/jags/compare_temp.mn.txt")
 print("--------------------------------------------------------------------")
