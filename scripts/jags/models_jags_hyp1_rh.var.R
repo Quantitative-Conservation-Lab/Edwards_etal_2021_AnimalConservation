@@ -1,4 +1,6 @@
 #-----------------------------------------------------
+#This code runs the model for hypothesis two described in Edwards et al.   
+#Written by Michela Busana with edits by Hannah Edwards
 
 # Scripts to run the models in JAGS with the jagsUI package.
 # These models address the hypothesis that the environmental predictor rh.var measured in the nest 

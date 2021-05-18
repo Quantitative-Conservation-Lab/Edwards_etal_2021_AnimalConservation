@@ -1,4 +1,6 @@
 #-----------------------------------------------------
+#This code runs the simulation described in Edwards et al.   
+#Written by Michela Busana with edits by Hannah Edwards
 
 # Scripts to run the models in JAGS with the jagsUI package.
 # These models address the hypothesis that incubation treatment affects  
@@ -11,8 +13,6 @@
 # Script also does check convergency of the chains, do basic model diagnostics and
 # compare model weights.
 # The m_null model is the NULL hypothesis and includes species as multilevel intercepts.
-# Pair ID is a random effect nested into species.
-# Facility is a random effect with three levels: CZ, ICF and Patuxent
 # Basic output is "sink" to file "model_outputs/jags/compare_jags_hyp2.txt"
 
 

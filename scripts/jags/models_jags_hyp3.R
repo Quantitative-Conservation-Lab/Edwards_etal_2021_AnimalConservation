@@ -1,4 +1,10 @@
-rm(list = ls())
+#This code runs the model for hypothesis three described in Edwards et al.   
+#Written by Hannah Edwards
+
+# Scripts to run the models in JAGS with the jagsUI package.
+# These models address the hypothesis that incubation treatment affects  
+# the temp/humidity/rotation of the egg during incubation.
+
 #----------------Load libraries.-------------
 library(dplyr)
 library(ggplot2) # for graphing
