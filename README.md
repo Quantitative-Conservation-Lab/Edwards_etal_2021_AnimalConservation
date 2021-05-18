@@ -2,6 +2,8 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 This repo is for Edwards et al. 2021 Animal Conservation. 
+Code written by Michela Busana, Sarah Converse and Hannah Edwards
+
 Data:
 egg_IDs - List of each egg identities
 Egg_summary_survival_dailydata_40min - Predictor and suvival data combined 
