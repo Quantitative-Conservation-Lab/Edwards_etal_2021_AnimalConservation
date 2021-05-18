@@ -1,9 +1,6 @@
 #-----------------Set working directory--------------------
 rm(list = ls())
 
-#setwd("/Users/hannahedwards/Documents/Calgary/CZ/Incubation Study")
-#setwd("C:/Users/HannahE/OneDrive - The Calgary Zoological Society/My Documents/Incubation Study/")
-
 ### Set the library path (just in case, as it seems a bit unpredictable at times)
 #.libPaths("C:/R/Library")
 
@@ -27,9 +24,6 @@ for(i in 1:length(all_f)){
 egg_IDs<-read.csv("data/egg_IDs.csv")
 
 # Combine all the data into one list for analysis.
-#######
-#issue! egg2 has no date recoreded
-#egg2$Date <- rep("19/04/2017", dim(egg2)[1])
 eggs_all <- list(egg1, egg2, egg3)
 
 #add a column for each egg that creates a time stamp
@@ -243,7 +237,3 @@ egg_summary_predictors<-merge(egg_summary, Paired.date, by="Egg.ID")
 #Remove white space from SHC-SHC group
 egg_summary_predictors$Treatment<-gsub('\\s+', '', egg_summary_predictors$Treatment)
 
-write.csv(egg_summary_predictors, file = "data/Egg_summary_survival_predictors2.csv", row.names = F)
-
-#S17#1, S17#2,S2#2, Y42#4, Y42#5-added data from a different time point because
-#of data gaps when data was offloaded during the study period

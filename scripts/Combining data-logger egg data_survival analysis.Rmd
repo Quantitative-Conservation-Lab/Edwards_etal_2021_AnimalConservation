@@ -21,8 +21,6 @@ library(gdata)
 #---------------- Load the data. -------------
 
 #Direct the computer to the folder where the data is stored
-#setwd("/Users/hannahedwards/Documents/Calgary/CZ/Incubation Study")
-setwd("C:/Users/HannahE/OneDrive - The Calgary Zoological Society/My Documents/Incubation Study/")
 
 # Import the data for each egg (no data collected in 2018).
 ###PWRCC 17
@@ -307,6 +305,4 @@ egg_summary_predictors<-merge(egg_summary, Paired.date, by="Egg.ID")
 #Remove white space from SHC-SHC group
 egg_summary_predictors$Treatment<-gsub('\\s+', '', egg_summary_predictors$Treatment)
 
-#write csv
-write.csv(egg_summary_predictors, file = "Egg_summary_survival_predictors.csv", row.names = F)
 ```
