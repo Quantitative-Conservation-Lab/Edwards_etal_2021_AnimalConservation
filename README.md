@@ -7,6 +7,8 @@ egg_IDs - List of each egg identities
 Egg_summary_survival_dailydata_40min - Predictor and suvival data combined
 eggs.new - Summary of predictors for each egg
 pair_day - List of dates of when the eggs were paired with the data-logger
+Individual egg data can be found on Figshare - link to be added
+
 Folder scripts:
 
 Combining data-logger egg data suvival analysis - Creates eggs.new dataset
