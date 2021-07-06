@@ -1,9 +1,9 @@
+# Script to read and combine data of egg survival and
+# data from the data loggers placed at the nest.
+# Use the .Rproj default working directory to run the script
+
 #-----------------Set working directory--------------------
 rm(list = ls())
-
-### Set the library path (just in case, as it seems a bit unpredictable at times)
-#.libPaths("C:/R/Library")
-
 
 #----------------Load libraries.-------------
 require(tidyverse)

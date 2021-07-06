@@ -1,7 +1,8 @@
-#-----------------Set working directory--------------------
-rm(list = ls())
+# Script to read and combine data of egg survival and
+# data from the data loggers placed at the nest.
+# Use the .Rproj default working directory to run the script
 
-#setwd("C:/Users/HannahE/OneDrive - The Calgary Zoological Society/My Documents/Incubation Study/")
+rm(list = ls())
 
 #----------------Load libraries.-------------
 require(reshape2)
