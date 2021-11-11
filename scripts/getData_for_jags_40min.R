@@ -62,11 +62,6 @@ nind <- nrow(enc.hist)#No. of individuals
 #read in the daily environmental data
 eggs.predict <- read.csv("data/Egg_summary_survival_dailydata_40min.csv")
 
-
-#-----------------CHECK THIS HANNAH - SHOULDN'T DO THIS ANY LONGER, RIGHT? 
-#-----------------Yes, we don't need to drop the first day anymore (line 65-66), but we
-#-----------------do need to create individual matrices of daily temp/humidity/egg turning
-
 #Create a variable that accounts for the first day of data being dropped as full day wasnt collected
 eggs.new$Paired.date_1<-eggs.new$Paired.date+1
 eggs.new$Paired.date_relative<-eggs.new$Paired.date_1-eggs.new$Paired.date
@@ -167,8 +162,7 @@ eggs.new$CZ <- ifelse(eggs.new$Facility==1, 1, 0)
 eggs.new$ICF <- ifelse(eggs.new$Facility==2, 1, 0)     
 eggs.new$Patuxent <- ifelse(eggs.new$Facility==3, 1, 0)
 eggs.new$notCZ <- ifelse(eggs.new$Facility!=1, 1, 0)
-#-----------------CHECK THIS HANNAH - note that you could write out these objects to .csv files and then each model script could just pull in the needed files, that way you'd only have to run the code above once 
-#-----------------Agreed, added csv code
+
 last.enc <- NULL
 for(i in 1:73){
   last.enc[i] <- enc.hist[i, last[i]]
